@@ -14,7 +14,7 @@ export default async function TodoList() {
 						{todo.title}
 					</Link>
 					<Link
-						className={buttonVariants({ variant: "outline" })}
+						className={buttonVariants({ variant: "outline", size: "sm" })}
 						href={`/todos/${todo.id}/edit`}
 					>
 						Edit
