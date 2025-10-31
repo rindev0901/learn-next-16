@@ -12,6 +12,5 @@ export default async function EditTodoPage({
 	const { id } = await params;
 
 	const todo = await getTodoById(id);
-
 	return <EditTodoForm id={id} todo={todo} />;
 }

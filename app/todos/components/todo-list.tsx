@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default async function TodoList() {
 	const todos = await getTodos();
-
 	return (
 		<ul className="space-y-2">
 			{todos.map((todo: any) => (

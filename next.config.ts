@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
 		turbopackUseSystemTlsCerts: true,
 		turbopackFileSystemCacheForDev: false,
 		turbopackFileSystemCacheForBuild: false,
+		serverActions: {
+			allowedOrigins: ["192.168.9.76:9999"]
+		}
 	},
 };
 

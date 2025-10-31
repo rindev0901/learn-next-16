@@ -8,7 +8,6 @@ async function getTodos() {
 
 	try {
 		const result = await db.query("SELECT id, title FROM todos");
-
 		return result.rows;
 	} catch (error) {
 		// Extract meaningful error message
@@ -30,7 +29,7 @@ async function getTodos() {
 }
 
 async function getTodoStatusById(id: string) {
-	"use cache";
+	"use cache: remote";
 	cacheTag(`todo-status-${id}`);
 	cacheLife("max"); // 1 hour
 

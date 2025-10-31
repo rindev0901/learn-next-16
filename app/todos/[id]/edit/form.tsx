@@ -13,30 +13,19 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { updateTodo } from "@/app/todos/actions/update-todo";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
-	const [state, formAction, pending] = useActionState(updateTodo, { id });
+	const updateTodoById = updateTodo.bind(null, id);
+	const [state, formAction, pending] = useActionState(updateTodoById, {
+		data: { completed: todo.completed, title: todo.title },
+		success: false,
+	});
 	const router = useRouter();
-
-	useEffect(() => {
-		if (!state.success && state.errors) {
-			if (typeof state.errors === "string") {
-				toast.error(state.errors);
-			} else {
-				const message =
-					state.errors.title?.join("<br/>") ||
-					"" + state.errors.completed?.join("<br/>") ||
-					"";
-				toast.error(message);
-			}
-		} else if (state.success) {
-			toast.success("Todo updated successfully!");
-		}
-	}, [state]);
 
 	return (
 		<Form action={formAction} className="w-full max-w-md">
@@ -49,7 +38,8 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 							name="title"
 							type="text"
 							placeholder="Todo Title"
-							defaultValue={todo.title}
+							defaultValue={state.data.title}
+							errors={state.errors?.title}
 						/>
 						<FieldDescription>
 							Enter a descriptive title for your todo.
@@ -60,7 +50,7 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 						<Checkbox
 							id="completed"
 							name="completed"
-							defaultChecked={todo.completed}
+							defaultChecked={state.data.completed}
 						/>
 						<FieldLabel htmlFor="completed">Mark as Completed</FieldLabel>
 					</Field>
@@ -85,6 +75,16 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 					</Field>
 				</FieldGroup>
 			</FieldSet>
+			{state.errors?.general && (
+				<Alert variant="destructive" className="mt-4">
+					<AlertCircle />
+					<AlertDescription>
+						{state.errors.general.map((error) => (
+							<p key={error}>{error}</p>
+						))}
+					</AlertDescription>
+				</Alert>
+			)}
 		</Form>
 	);
 }

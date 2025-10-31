@@ -32,7 +32,5 @@ async function TodoStatus({ todoId }: { todoId: string }) {
 	// Now we can cache the status in a remote cache handler.
 	// Regular 'use cache' would NOT work here because we're in a dynamic context.
 	const status = await getTodoStatusById(todoId);
-
 	return <div>Status: {status}</div>;
 }
-
