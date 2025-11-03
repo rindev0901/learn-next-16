@@ -26,6 +26,7 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 		success: false,
 	});
 	const router = useRouter();
+	console.log(todo);
 
 	return (
 		<Form action={formAction} className="w-full max-w-md">

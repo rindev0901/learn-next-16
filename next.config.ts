@@ -14,11 +14,15 @@ const nextConfig: NextConfig = {
 	reactStrictMode: false,
 	experimental: {
 		turbopackUseSystemTlsCerts: true,
-		turbopackFileSystemCacheForDev: false,
-		turbopackFileSystemCacheForBuild: false,
 		serverActions: {
-			allowedOrigins: ["192.168.9.76:9999"]
-		}
+			allowedOrigins: ["192.168.9.76:9999"],
+		},
+		cssChunking: true,
+	},
+	logging: {
+		fetches: {
+			fullUrl: true,
+		},
 	},
 };
 
