@@ -8,12 +8,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useLocale } from "@/app/hooks/useLocale";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+	const lang = useLocale();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -28,7 +30,7 @@ export default function LoginPage() {
 				{
 					onSuccess: () => {
 						toast.success("Logged in successfully!");
-						router.push("/todos");
+						router.push(`/${lang}`);
 					},
 					onError: (ctx) => {
 						toast.error(ctx.error.message || "Invalid credentials");
