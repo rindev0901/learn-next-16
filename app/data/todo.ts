@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from "next/cache";
-import { db } from "@/utils/libs/db";
+import { db } from "@/lib/db";
 
 async function getTodos() {
 	"use cache";

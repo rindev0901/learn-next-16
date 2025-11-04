@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToggleMode } from "@/components/ui/toggle-mode";
 import { Toaster } from "@/components/ui/sonner";
+import Header from "./[lang]/components/header";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -28,7 +29,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased container mx-auto mt-10`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<ThemeProvider
 					attribute="class"
@@ -36,8 +37,9 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
+						<Header />
 					<ToggleMode />
-					{children}
+					<div className="container mx-auto">{children}</div>
 					<Toaster richColors theme="light" toastOptions={{}} />
 				</ThemeProvider>
 			</body>

@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/app/utils/libs/db";
+import { db } from "@/lib/db";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { DatabaseError } from "pg";
