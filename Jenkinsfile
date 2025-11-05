@@ -22,7 +22,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
-					sh 'npm run build'
+					sh 'npm run dev && npm run build'
 				}
 			}
 		}
