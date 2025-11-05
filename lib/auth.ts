@@ -6,4 +6,5 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	trustedOrigins: [process.env.NEXT_PUBLIC_BASE_URL!],
 });
