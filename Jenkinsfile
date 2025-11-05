@@ -1,0 +1,80 @@
+pipeline {
+	agent any
+
+	environment {
+		NODE_VERSION = '22'
+		APP_PATH = 'C:\\DUC2.NH\\next-app'
+	}
+
+	stages {
+		stage('Checkout') {
+			steps {
+				checkout scm
+			}
+		}
+
+		stage('Install Dependencies') {
+			steps {
+				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
+					sh 'npm ci'
+				}
+			}
+		}
+
+		stage('Build') {
+			steps {
+				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
+					sh 'npm run build'
+				}
+			}
+		}
+
+		stage('Prepare Standalone') {
+			steps {
+				script {
+					// Copy static files to standalone directory
+					sh 'cp -r .next/static .next/standalone/.next/'
+
+					// Copy public folder if it exists
+					sh 'cp -r public .next/standalone/ || true'
+				}
+			}
+		}
+
+		stage('Deploy to Server') {
+			steps {
+				sshPublisher(
+					publishers: [
+						sshPublisherDesc(
+							configName: 'SSHOver976',
+							transfers: [
+								sshTransfer(
+									sourceFiles: '.next/standalone/**',
+									removePrefix: '.next/standalone',
+									remoteDirectory: ${APP_PATH},
+									execCommand: """
+										cd ${APP_PATH}
+										pm2 start server.js
+									"""
+								)
+							],
+							verbose: true
+						)
+					]
+				)
+			}
+		}
+	}
+
+	post {
+		success {
+			echo 'Deployment successful!'
+		}
+		failure {
+			echo 'Deployment failed!'
+		}
+		always {
+			cleanWs()
+		}
+	}
+}
