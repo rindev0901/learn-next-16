@@ -54,7 +54,7 @@ pipeline {
 									sshTransfer(
 										sourceFiles: '.next/standalone/**',
 										removePrefix: '.next/standalone',
-										remoteDirectory: ${APP_PATH},
+										remoteDirectory: "${APP_PATH}",
 										execCommand: "pm2 start server.js"
 									)
 								],
