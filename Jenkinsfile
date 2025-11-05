@@ -22,7 +22,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
-					withCredentials([file(credentialsId: 'env_local_file', variable: 'ENV_FILE')]) {
+					withCredentials([file(credentialsId: 'next16-app-env', variable: 'ENV_FILE')]) {
 						sh 'cp "$ENV_FILE" .env.local'
 						sh 'npm run dev &'
 						sh 'npm run build'
