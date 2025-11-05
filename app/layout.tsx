@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToggleMode } from "@/components/ui/toggle-mode";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "./[lang]/components/header";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -37,9 +36,8 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-						<Header />
+					{children}
 					<ToggleMode />
-					<div className="container mx-auto">{children}</div>
 					<Toaster richColors theme="light" toastOptions={{}} />
 				</ThemeProvider>
 			</body>

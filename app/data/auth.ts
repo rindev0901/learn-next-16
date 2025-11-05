@@ -12,7 +12,7 @@ async function getSession() {
 	});
 
 	if (session?.user) {
-		cacheTag(`user-session-${session.user.id}`, `user-${session.user.email}`);
+		cacheTag(`user-session-${session.user.id}`);
 	}
 
 	return session;

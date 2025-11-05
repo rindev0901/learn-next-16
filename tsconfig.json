@@ -20,6 +20,7 @@
 		],
 		"paths": {
 			"@/*": ["./*"],
+			"@/lang/*": ["./app/[lang]/*"],
 			"@/utils/*": ["./app/utils/*"],
 			"@/public/*": ["./public/*"]
 		}

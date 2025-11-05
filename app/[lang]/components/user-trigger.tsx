@@ -1,4 +1,5 @@
 "use client";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -8,7 +9,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "@/lib/auth-client";
 import {
 	BadgeCheck,
 	Bell,
@@ -20,14 +20,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { User } from "better-auth";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useLocale } from "@/app/hooks/useLocale";
+import { logout } from "@/app/[lang]/actions/logout";
 
 interface UserTriggerProps {
 	user: User;
 }
 
 export function UserTrigger({ user }: UserTriggerProps) {
-	const router = useRouter();
+	const locale = useLocale();
 
 	return (
 		<DropdownMenu>
@@ -75,16 +76,12 @@ export function UserTrigger({ user }: UserTriggerProps) {
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={async () => {
-						const { error } = await signOut();
+						const { error } = await logout(user.id, locale);
 
 						if (error) {
-							toast.error(error.code, {
-								description: error.message,
-							});
+							toast.error(error);
 							return;
 						}
-
-						router.refresh();
 					}}
 				>
 					<LogOut />

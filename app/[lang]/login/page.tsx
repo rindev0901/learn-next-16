@@ -1,48 +1,27 @@
 "use client";
 
-import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useLocale } from "@/app/hooks/useLocale";
+import { login } from "@/lang/actions/login";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [loading, setLoading] = useState(false);
-	const router = useRouter();
 	const lang = useLocale();
+	const [isPending, startTransition] = useTransition();
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setLoading(true);
-
-		try {
-			await signIn.email(
-				{
-					email,
-					password,
-				},
-				{
-					onSuccess: () => {
-						toast.success("Logged in successfully!");
-						router.push(`/${lang}`);
-					},
-					onError: (ctx) => {
-						toast.error(ctx.error.message || "Invalid credentials");
-					},
-				}
-			);
-		} catch {
-			toast.error("An error occurred during login");
-		} finally {
-			setLoading(false);
-		}
-	};
+	const handleSubmit = () =>
+		startTransition(async () => {
+			const { error } = await login(email, password, lang);
+			if (error) {
+				toast.error(error);
+			}
+		});
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
@@ -54,7 +33,7 @@ export default function LoginPage() {
 					</p>
 				</div>
 
-				<form onSubmit={handleSubmit} className="space-y-6">
+				<form className="space-y-6">
 					<FieldGroup>
 						<Field>
 							<FieldLabel htmlFor="email">Email</FieldLabel>
@@ -83,8 +62,13 @@ export default function LoginPage() {
 						</Field>
 					</FieldGroup>
 
-					<Button type="submit" className="w-full" disabled={loading}>
-						{loading ? "Signing in..." : "Sign in"}
+					<Button
+						type="button"
+						className="w-full"
+						disabled={isPending}
+						onClick={handleSubmit}
+					>
+						{isPending ? "Signing in..." : "Sign in"}
 					</Button>
 
 					<p className="text-center text-sm text-muted-foreground">
