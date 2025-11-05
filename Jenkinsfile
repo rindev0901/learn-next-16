@@ -4,18 +4,16 @@ pipeline {
 	environment {
 		NODE_VERSION = '22'
 		APP_PATH = 'C:\\DUC2.NH\\next-app'
+		// Disable SSL verification for npm (if needed)
+		NODE_TLS_REJECT_UNAUTHORIZED = '0'
 	}
 
 	stages {
-		stage('Checkout') {
-			steps {
-				checkout scm
-			}
-		}
-
 		stage('Install Dependencies') {
 			steps {
 				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
+					// Use npm with strict-ssl=false for self-signed certificates
+					sh 'npm config set strict-ssl false'
 					sh 'npm ci'
 				}
 			}
