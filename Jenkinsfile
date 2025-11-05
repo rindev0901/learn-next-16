@@ -3,7 +3,6 @@ pipeline {
 
 	environment {
 		NODE_VERSION = '22'
-		APP_PATH = '/DUC2.NH/next-app'
 		// Disable SSL verification for npm (if needed)
 		NODE_TLS_REJECT_UNAUTHORIZED = '0'
 	}
@@ -54,7 +53,7 @@ pipeline {
 									sshTransfer(
 										sourceFiles: '.next/standalone/**',
 										removePrefix: '.next/standalone',
-										remoteDirectory: "${APP_PATH}",
+										remoteDirectory: 'C:/DUC2.NH/next-app',
 										execCommand: "pm2 start server.js"
 									)
 								],
