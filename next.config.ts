@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 	reactStrictMode: false,
 	experimental: {
-		turbopackUseSystemTlsCerts: true,
+		// turbopackUseSystemTlsCerts: true,
 		serverActions: {
 			allowedOrigins: ["192.168.9.76:9999"],
 		},
