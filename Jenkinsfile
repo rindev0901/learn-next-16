@@ -22,8 +22,11 @@ pipeline {
 		stage('Build') {
 			steps {
 				nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
-					sh 'npm run dev &'
-					sh 'npm run build'
+					withCredentials([file(credentialsId: 'env_local_file', variable: 'ENV_FILE')]) {
+						sh 'cp "$ENV_FILE" .env.local'
+						sh 'npm run dev &'
+						sh 'npm run build'
+					}
 				}
 			}
 		}
@@ -50,7 +53,7 @@ pipeline {
 								sshTransfer(
 									sourceFiles: '.next/standalone/**',
 									removePrefix: '.next/standalone',
-									remoteDirectory: ${APP_PATH},
+									remoteDirectory: "${APP_PATH}",
 									execCommand: """
 										cd ${APP_PATH}
 										pm2 start server.js
