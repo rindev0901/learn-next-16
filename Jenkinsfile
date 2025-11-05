@@ -45,25 +45,27 @@ pipeline {
 
 		stage('Deploy to Server') {
 			steps {
-				sshPublisher(
-					publishers: [
-						sshPublisherDesc(
-							configName: 'SSHOver976',
-							transfers: [
-								sshTransfer(
-									sourceFiles: '.next/standalone/**',
-									removePrefix: '.next/standalone',
-									remoteDirectory: "${APP_PATH}",
-									execCommand: """
-										cd ${APP_PATH}
-										pm2 start server.js
-									"""
-								)
-							],
-							verbose: true
-						)
-					]
-				)
+				script {
+					sshPublisher(
+						publishers: [
+							sshPublisherDesc(
+								configName: 'SSHOver976',
+								transfers: [
+									sshTransfer(
+										sourceFiles: '.next/standalone/**',
+										removePrefix: '.next/standalone',
+										remoteDirectory: env.APP_PATH,
+										execCommand: """
+											cd ${env.APP_PATH}
+											pm2 start server.js
+										"""
+									)
+								],
+								verbose: true
+							)
+						]
+					)
+				}
 			}
 		}
 	}
