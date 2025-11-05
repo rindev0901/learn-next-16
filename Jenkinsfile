@@ -55,7 +55,7 @@ pipeline {
 										sourceFiles: '.next/standalone/**',
 										removePrefix: '.next/standalone',
 										remoteDirectory: "${APP_PATH}",
-										execCommand: "cd ${APP_PATH} && pm2 start server.js"
+										execCommand: "cd ${APP_PATH} && pm2 start ecosystem.config.js"
 									)
 								],
 								verbose: true
