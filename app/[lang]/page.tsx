@@ -8,7 +8,6 @@ export default async function Page({
 	params: Promise<{ lang: Lang }>;
 }) {
 	await requireAuth();
-
 	const { lang } = await params;
 
 	const dict = await getDictionary(lang); // en

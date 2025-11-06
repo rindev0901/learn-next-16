@@ -31,6 +31,8 @@ async function requireAuth() {
 	if (!session?.session) {
 		unauthorized();
 	}
+
+	return session;
 }
 
 export { getSession, requireAuth };

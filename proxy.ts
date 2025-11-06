@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "./lib/auth";
 
 export const locales = ["en", "nl"] as const;
 export type Lang = (typeof locales)[number];
@@ -16,9 +17,26 @@ function getLocale(request: NextRequest) {
 	return matchedLocale || locales[0];
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	// Check if there is any supported locale in the pathname
 	const { pathname } = request.nextUrl;
+
+	const segments = pathname.split("/").filter(Boolean);
+
+	if (
+		segments.length > 1 &&
+		(segments[1].startsWith("login") || segments[1].startsWith("register"))
+	) {
+		const session = await auth.api.getSession({
+			headers: request.headers,
+		});
+
+		if (session?.session) {
+			request.nextUrl.pathname = `/${segments[0]}`;
+			return NextResponse.redirect(request.nextUrl);
+		}
+	}
+
 	const pathnameHasLocale = locales.some(
 		(locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
 	);
