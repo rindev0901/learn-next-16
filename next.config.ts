@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
 	experimental: {
 		// turbopackUseSystemTlsCerts: true,
 		serverActions: {
-			allowedOrigins: ["192.168.9.76:9999"],
+			allowedOrigins: ["192.168.9.76:3000"],
 		},
 		cssChunking: true,
 	},
