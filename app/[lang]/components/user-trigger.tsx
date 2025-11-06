@@ -76,7 +76,7 @@ export function UserTrigger({ user }: UserTriggerProps) {
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={async () => {
-						const { error } = await logout(user.id, locale);
+						const { error } = await logout(locale);
 
 						if (error) {
 							toast.error(error);
