@@ -29,11 +29,8 @@ export function generateStaticParams() {
 export default async function RootLayout({
 	children,
 	params,
-}: Readonly<{
-	children: React.ReactNode;
-	params: Promise<{ lang: Lang }>;
-}>) {
-	const { lang } = await params;
+}: LayoutProps<"/">) {
+	const { lang } = await params as { lang: Lang };
 
 	return (
 		<html lang="en" suppressHydrationWarning>

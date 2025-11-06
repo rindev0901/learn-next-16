@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Route } from "next";
+import { Lang } from "@/proxy";
 
 function UserProfileSkeleton() {
 	return (
@@ -17,7 +18,7 @@ function UserProfileSkeleton() {
 	);
 }
 
-export default function Header({ lang }: { lang: string }) {
+export default function Header({ lang }: { lang: Lang }) {
 	return (
 		<header className="flex items-center justify-between p-4">
 			<h1 className="text-3xl font-bold">
