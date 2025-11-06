@@ -1,6 +1,14 @@
 import { auth } from "@/lib/auth";
 import { cacheLife, cacheTag } from "next/cache";
 import { headers } from "next/headers";
+import { unauthorized } from "next/navigation";
+
+/*
+	Good to know: Unlike use cache, private caches are not prerendered statically
+	as they contain personalized data that is not shared between users.
+
+	** Must suspense at build time **
+*/
 
 async function getSession() {
 	"use cache: private";
@@ -18,4 +26,11 @@ async function getSession() {
 	return session;
 }
 
-export { getSession };
+async function requireAuth() {
+	const session = await getSession();
+	if (!session?.session) {
+		unauthorized();
+	}
+}
+
+export { getSession, requireAuth };

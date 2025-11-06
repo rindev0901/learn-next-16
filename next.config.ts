@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
 			allowedOrigins: ["192.168.9.76:3000"],
 		},
 		cssChunking: true,
+		authInterrupts: true,
 	},
 	logging: {
 		fetches: {

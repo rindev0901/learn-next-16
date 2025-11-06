@@ -1,6 +1,8 @@
 import UserProfile from "./user-profile";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { Route } from "next";
 
 function UserProfileSkeleton() {
 	return (
@@ -15,10 +17,12 @@ function UserProfileSkeleton() {
 	);
 }
 
-export default async function Header() {
+export default function Header({ lang }: { lang: string }) {
 	return (
-		<header className="mb-8 flex items-center justify-between p-4">
-			<h1 className="text-3xl font-bold">My Application</h1>
+		<header className="flex items-center justify-between p-4">
+			<h1 className="text-3xl font-bold">
+				<Link href={`/${lang}/` as Route}>My Application</Link>
+			</h1>
 
 			<Suspense fallback={<UserProfileSkeleton />}>
 				<UserProfile />

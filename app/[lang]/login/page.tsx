@@ -8,8 +8,11 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useLocale } from "@/app/hooks/useLocale";
 import { login } from "@/lang/actions/login";
+import { cn } from "@/lib/utils";
 
-export default function LoginPage() {
+export default function LoginPage(
+	props: Partial<PageProps<"/[lang]/login"> & { className: string }>
+) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const lang = useLocale();
@@ -24,7 +27,12 @@ export default function LoginPage() {
 		});
 
 	return (
-		<div className="flex min-h-screen items-center justify-center">
+		<div
+			className={cn(
+				"flex items-center justify-center min-h-[calc(100vh-68px)]",
+				props.className
+			)}
+		>
 			<div className="w-full max-w-md space-y-8 rounded-lg border p-8">
 				<div className="text-center">
 					<h1 className="text-2xl font-bold">Welcome back</h1>

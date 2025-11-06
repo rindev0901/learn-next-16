@@ -1,15 +1,14 @@
+import { requireAuth } from "@/app/data/auth";
 import { getDictionary } from "./dictionaries";
-import { locales } from "@/proxy";
-
-export function generateStaticParams() {
-	return locales.map((lang) => ({ lang }));
-}
+import { Lang } from "@/proxy";
 
 export default async function Page({
 	params,
 }: {
-	params: Promise<{ lang: "en" | "nl" }>;
+	params: Promise<{ lang: Lang }>;
 }) {
+	await requireAuth();
+
 	const { lang } = await params;
 
 	const dict = await getDictionary(lang); // en
