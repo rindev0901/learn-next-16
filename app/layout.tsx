@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToggleMode } from "@/components/ui/toggle-mode";
 import { Toaster } from "@/components/ui/sonner";
-import { Lang, locales } from "@/proxy";
-import Header from "@/lang/components/header";
+import { locales } from "@/proxy";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -26,12 +25,7 @@ export function generateStaticParams() {
 	return locales.map((lang) => ({ lang }));
 }
 
-export default async function RootLayout({
-	children,
-	params,
-}: LayoutProps<"/">) {
-	const { lang } = await params as { lang: Lang };
-
+export default async function LocaleLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
@@ -43,8 +37,7 @@ export default async function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Header lang={lang}/>
-					<div className="container mx-auto my-10">{children}</div>
+					{children}
 					<ToggleMode />
 					<Toaster richColors theme="light" toastOptions={{}} />
 				</ThemeProvider>
