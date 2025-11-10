@@ -20,7 +20,7 @@ const user = ac.newRole({
 });
 
 const manager = ac.newRole({
-	user: ["create", "get", "list", "update"],
+	user: ["create", "get", "update"],
 	session: ["list", "revoke"],
 });
 
@@ -29,4 +29,6 @@ const admin = ac.newRole({
 	user: [...statement.user],
 });
 
-export { ac, admin, manager, user, type Permission };
+type Role = "admin" | "user" | "manager";
+
+export { ac, admin, manager, user, type Permission, type Role };
