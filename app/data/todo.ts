@@ -27,8 +27,6 @@ async function getTodos() {
 		} else {
 			errorMessage = String(error);
 		}
-
-		console.error("Error fetching todos:", errorMessage);
 		throw new Error(`Failed to fetch todos: ${errorMessage}`);
 	}
 }

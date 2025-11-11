@@ -15,7 +15,7 @@ export default async function LocaleLayout({
 	return (
 		<>
 			<Header lang={lang} />
-			<div className="container mx-auto my-10">{children}</div>
+			<div className="container mx-auto">{children}</div>
 		</>
 	);
 }

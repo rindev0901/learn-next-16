@@ -19,7 +19,7 @@ function UserProfileSkeleton() {
 
 export default function Header({ lang }: { lang: string }) {
 	return (
-		<header className="flex items-center justify-between p-4">
+		<header className="container mx-auto flex items-center justify-between p-4">
 			<h1 className="text-3xl font-bold">
 				<Link href={`/${lang}/` as Route}>My Application</Link>
 			</h1>
