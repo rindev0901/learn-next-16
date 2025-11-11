@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Form from "next/form";
@@ -12,43 +11,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createTodo } from "@/lang/todos/actions/create-todo";
+import { useLocale } from "@/app/hooks/useLocale";
 
 export default function CreateTodoForm() {
-	const [state, formAction, pending] = useActionState(createTodo, {});
-	const router = useRouter();
+	const locale = useLocale();
+	const [state, formAction, pending] = useActionState(createTodo, {
+		data: { title: "", completed: false, locale },
+	});
 
-	useEffect(() => {
-		if (!state.success && state.errors) {
-			if (typeof state.errors === "string") {
-				toast.error(state.errors);
-			} else {
-				const message =
-					state.errors.title?.join("<br/>") ||
-					"" + state.errors.completed?.join("<br/>") ||
-					"";
-				toast.error(message);
-			}
-		} else if (state.success) {
-			toast.success("Todo created successfully!");
-		}
-	}, [state]);
+	const router = useRouter();
 
 	return (
 		<Form action={formAction} className="w-full max-w-md">
 			<FieldSet>
 				<FieldGroup>
 					<Field>
+						<Input
+							id="locale"
+							name="locale"
+							type="hidden"
+							defaultValue={locale}
+						/>
 						<FieldLabel htmlFor="title">Title</FieldLabel>
 						<Input
 							id="title"
 							name="title"
 							type="text"
 							placeholder="Todo Title"
+							defaultValue={state.data.title}
+							errors={state.errors?.title}
 						/>
 						<FieldDescription>
 							Enter a descriptive title for your todo.
@@ -56,7 +51,11 @@ export default function CreateTodoForm() {
 					</Field>
 
 					<Field orientation="horizontal">
-						<Checkbox id="completed" name="completed" />
+						<Checkbox
+							id="completed"
+							name="completed"
+							defaultChecked={state.data.completed}
+						/>
 						<FieldLabel htmlFor="completed">Mark as Completed</FieldLabel>
 					</Field>
 					<Field orientation="horizontal">

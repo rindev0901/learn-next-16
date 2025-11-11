@@ -18,11 +18,14 @@ import { useRouter } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { updateTodo } from "@/lang/todos/actions/update-todo";
+import { useLocale } from "@/app/hooks/useLocale";
 
 export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
+	const locale = useLocale();
+
 	const updateTodoById = updateTodo.bind(null, id);
 	const [state, formAction, pending] = useActionState(updateTodoById, {
-		data: { completed: todo.completed, title: todo.title },
+		data: { completed: todo.completed, title: todo.title, locale },
 		success: false,
 	});
 
@@ -34,6 +37,12 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 				<FieldGroup>
 					<Field>
 						<FieldLabel htmlFor="title">Title</FieldLabel>
+						<Input
+							id="locale"
+							name="locale"
+							type="hidden"
+							defaultValue={locale}
+						/>
 						<Input
 							id="title"
 							name="title"

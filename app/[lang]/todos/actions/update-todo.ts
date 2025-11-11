@@ -10,9 +10,11 @@ import z from "zod";
 const updateTodoSchema = z.object({
 	title: z.string().min(5, "Title must be at least 5 characters long"),
 	completed: z.coerce.boolean().optional().default(false),
+	locale: z.string().min(2).max(5),
 	general: z.string().optional(),
 });
 type EditTodoFormValues = z.infer<typeof updateTodoSchema>;
+
 export type EditTodoSchemaErrorType =
 	z.ZodFlattenedError<EditTodoFormValues>["fieldErrors"];
 
@@ -44,7 +46,7 @@ export async function updateTodo(
 		};
 	}
 
-	const { title, completed } = validatedFields.data;
+	const { title, completed, locale } = validatedFields.data;
 	try {
 		const result = await db.query(
 			"UPDATE todos SET title = $1, completed = $2, user_id = $3 WHERE id = $4 RETURNING title, completed",
@@ -84,5 +86,6 @@ export async function updateTodo(
 			errors: { general: [`Unknown error`] },
 		};
 	}
-	redirect(`/todos`);
+
+	redirect(`/${locale}/todos`);
 }
