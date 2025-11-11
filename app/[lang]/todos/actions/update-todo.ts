@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAuth } from "@/app/data/auth";
 import { db } from "@/lib/db";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -26,6 +27,8 @@ export async function updateTodo(
 	_prevState: EditTodoActionState,
 	formData: FormData | null
 ): Promise<EditTodoActionState> {
+	const { user } = await requireAuth();
+
 	// Validate the incoming data
 	if (formData === null) {
 		return _prevState;
@@ -44,8 +47,8 @@ export async function updateTodo(
 	const { title, completed } = validatedFields.data;
 	try {
 		const result = await db.query(
-			"UPDATE todos SET title = $1, completed = $2 WHERE id = $3 RETURNING title, completed",
-			[title, completed, id]
+			"UPDATE todos SET title = $1, completed = $2, user_id = $3 WHERE id = $4 RETURNING title, completed",
+			[title, completed, user.id, id]
 		);
 
 		// Check if any rows were actually updated
@@ -59,9 +62,11 @@ export async function updateTodo(
 			};
 		}
 
-		updateTag("todos");
 		updateTag(`todo-${id}`);
 		updateTag(`todo-status-${id}`);
+
+		// refresh();
+
 		// return { success: true, data: result.rows[0] };
 	} catch (error) {
 		if (error instanceof DatabaseError) {
@@ -73,7 +78,11 @@ export async function updateTodo(
 				},
 			};
 		}
-		return { data: failureData, success: false, errors: { general: [`Unknown error`] } };
+		return {
+			data: failureData,
+			success: false,
+			errors: { general: [`Unknown error`] },
+		};
 	}
 	redirect(`/todos`);
 }

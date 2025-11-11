@@ -12,11 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { createTodo } from "@/app/todos/actions/create-todo";
 import { useActionState, useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { createTodo } from "@/lang/todos/actions/create-todo";
 
 export default function CreateTodoForm() {
 	const [state, formAction, pending] = useActionState(createTodo, {});

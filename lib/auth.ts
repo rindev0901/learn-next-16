@@ -20,4 +20,8 @@ export const auth = betterAuth({
 		nextCookies(),
 	],
 	trustedOrigins: [process.env.NEXT_PUBLIC_BASE_URL!],
+	session: {
+		expiresIn: 60 * 60 * 24 * 7,
+		updateAge: 60 * 60 * 24,
+	},
 });

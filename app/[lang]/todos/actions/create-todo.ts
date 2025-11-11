@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAuth } from "@/app/data/auth";
 import { db } from "@/lib/db";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -27,6 +28,7 @@ export async function createTodo(
 	data: FormData
 ): Promise<CreateTodoActionState> {
 	// Validate the incoming data
+	const { user } = await requireAuth();
 	const validatedFields = createTodoSchema.safeParse(Object.fromEntries(data));
 	if (!validatedFields.success) {
 		return {
@@ -38,8 +40,8 @@ export async function createTodo(
 	const { title, completed } = validatedFields.data;
 	try {
 		const result = await db.query(
-			"INSERT INTO todos (title, completed) VALUES ($1, $2) RETURNING id",
-			[title, completed]
+			"INSERT INTO todos (title, completed, user_id) VALUES ($1, $2, $3) RETURNING id",
+			[title, completed, user.id]
 		);
 
 		// Check if any rows were actually updated
@@ -50,7 +52,6 @@ export async function createTodo(
 			};
 		}
 		id = result.rows[0].id;
-		updateTag("todos");
 	} catch (error) {
 		if (error instanceof DatabaseError) {
 			return {

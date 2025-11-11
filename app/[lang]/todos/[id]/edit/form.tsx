@@ -12,12 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { updateTodo } from "@/app/todos/actions/update-todo";
 import { useActionState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { updateTodo } from "@/lang/todos/actions/update-todo";
 
 export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 	const updateTodoById = updateTodo.bind(null, id);
@@ -25,8 +25,8 @@ export default function EditTodoForm({ id, todo }: { id: string; todo: any }) {
 		data: { completed: todo.completed, title: todo.title },
 		success: false,
 	});
+
 	const router = useRouter();
-	console.log(todo);
 
 	return (
 		<Form action={formAction} className="w-full max-w-md">
