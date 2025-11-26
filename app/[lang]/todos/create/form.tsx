@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import { createTodo } from "@/lang/todos/actions/create-todo";
@@ -28,9 +28,14 @@ export default function CreateTodoForm({
 	});
 
 	const router = useRouter();
+	const formRef = useRef<HTMLFormElement>(null);
+
+	const handleReset = () => {
+		formRef.current?.reset();
+	};
 
 	return (
-		<Form action={formAction} className="w-full max-w-md">
+		<Form ref={formRef} action={formAction} className="w-full max-w-md">
 			<FieldSet>
 				<FieldGroup>
 					<Field>
@@ -67,11 +72,17 @@ export default function CreateTodoForm({
 							variant="outline"
 							type="button"
 							disabled={pending}
-							onClick={() => router.back()}
+							onClick={() => {
+								if (isRedirect) {
+									router.back();
+									return;
+								}
+								handleReset();
+							}}
 						>
 							Cancel
 						</Button>
-						<Button type="submit">
+						<Button type="submit" disabled={pending}>
 							{pending ? (
 								<>
 									<Spinner /> Creating
