@@ -2,15 +2,17 @@
 
 import { requireAuth } from "@/app/data/auth";
 import { db } from "@/lib/db";
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { DatabaseError } from "pg";
 import z from "zod";
 
 const createTodoSchema = z.object({
 	title: z.string().min(5, "Title must be at least 5 characters long"),
-	completed: z.coerce.boolean().optional().default(false),
+	completed: z.coerce.boolean().default(false).optional(),
 	locale: z.string().min(2).max(5),
 	general: z.string().optional(),
+	isRedirect: z.coerce.boolean().default(false).optional(),
 });
 type CreateTodoFormValues = z.infer<typeof createTodoSchema>;
 
@@ -59,6 +61,14 @@ export async function createTodo(
 			};
 		}
 		id = result.rows[0].id;
+
+		refresh();
+		if (validatedFields.data.isRedirect) {
+			return {
+				success: true,
+				data: { title: "", completed: false, locale, isRedirect: false },
+			};
+		}
 	} catch (error) {
 		if (error instanceof DatabaseError) {
 			return {

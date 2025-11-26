@@ -67,8 +67,6 @@ export async function updateTodo(
 		updateTag(`todo-${id}`);
 		updateTag(`todo-status-${id}`);
 
-		// refresh();
-
 		// return { success: true, data: result.rows[0] };
 	} catch (error) {
 		if (error instanceof DatabaseError) {

@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
 		},
 		cssChunking: true,
 		authInterrupts: true,
+		mdxRs: true,
 	},
 	logging: {
 		fetches: {
@@ -28,6 +29,7 @@ const nextConfig: NextConfig = {
 	},
 	output: "standalone",
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	reactCompiler: true,
 };
 const withMDX = createMDX({
 	// Add markdown plugins here, as desired

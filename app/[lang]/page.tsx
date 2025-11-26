@@ -1,6 +1,7 @@
 import { requireAuth } from "@/app/data/auth";
 import { getDictionary } from "./dictionaries";
 import { Lang } from "@/proxy";
+import Link from "next/link";
 
 export default async function Page({
 	params,
@@ -11,5 +12,10 @@ export default async function Page({
 	const { lang } = await params;
 
 	const dict = await getDictionary(lang); // en
-	return <button>{dict.products.cart}</button>; // Add to Cart
+	return (
+		<div className="flex flex-col items-start">
+			<button>{dict.products.cart}</button>
+			<Link href={`/${lang}/todos`} className="underline">Todos</Link>
+		</div>
+	); // Add to Cart
 }

@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Route } from "next";
+import CreateTodoForm from "./create/form";
 
 export default function TodosPage() {
 	return (
@@ -17,17 +18,20 @@ export default function TodosPage() {
 					Create New Todo
 				</Link>
 			</div>
-			<Suspense
-				fallback={
-					<div className="flex flex-col gap-3">
-						<Skeleton className="w-[120px] h-4" />
-						<Skeleton className="w-[120px] h-4" />
-						<Skeleton className="w-[120px] h-4" />
-					</div>
-				}
-			>
-				<TodoList />
-			</Suspense>
+			<div className="grid grid-cols-2">
+				<Suspense
+					fallback={
+						<div className="flex flex-col gap-3">
+							<Skeleton className="w-[120px] h-4" />
+							<Skeleton className="w-[120px] h-4" />
+							<Skeleton className="w-[120px] h-4" />
+						</div>
+					}
+				>
+					<TodoList />
+				</Suspense>
+				<CreateTodoForm isRedirect={false} />
+			</div>
 		</div>
 	);
 }

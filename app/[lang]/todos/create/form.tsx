@@ -17,10 +17,14 @@ import { useRouter } from "next/navigation";
 import { createTodo } from "@/lang/todos/actions/create-todo";
 import { useLocale } from "@/app/hooks/useLocale";
 
-export default function CreateTodoForm() {
+export default function CreateTodoForm({
+	isRedirect,
+}: {
+	isRedirect?: boolean;
+}) {
 	const locale = useLocale();
 	const [state, formAction, pending] = useActionState(createTodo, {
-		data: { title: "", completed: false, locale },
+		data: { title: "", locale, isRedirect },
 	});
 
 	const router = useRouter();

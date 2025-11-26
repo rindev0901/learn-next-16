@@ -16,6 +16,7 @@ export async function login(email: string, password: string, lang: string) {
 			body: { email, password },
 		});
 	} catch (error) {
+		console.log("Login error > ", error);
 		if (error instanceof APIError) {
 			return {
 				error: error.message,
