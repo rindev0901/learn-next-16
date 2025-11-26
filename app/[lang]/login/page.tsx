@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useLocale } from "@/app/hooks/useLocale";
 import { login } from "@/lang/actions/login";
 import { cn } from "@/lib/utils";
+import { GoogleLoginButton } from "./google-btn";
 
 export default function LoginPage(
 	props: Partial<PageProps<"/[lang]/login"> & { className: string }>
@@ -78,7 +79,7 @@ export default function LoginPage(
 					>
 						{isPending ? "Signing in..." : "Sign in"}
 					</Button>
-
+					<GoogleLoginButton />
 					<p className="text-center text-sm text-muted-foreground">
 						Don&apos;t have an account?{" "}
 						<Link href="/register" className="font-medium underline">
