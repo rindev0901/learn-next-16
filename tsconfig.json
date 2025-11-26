@@ -22,7 +22,9 @@
 			"@/*": ["./*"],
 			"@/lang/*": ["./app/[lang]/*"],
 			"@/utils/*": ["./app/utils/*"],
-			"@/public/*": ["./public/*"]
+			"@/public/*": ["./public/*"],
+			"@/types/*": ["./app/types/*"],
+			"@/schemas/*": ["./app/schemas/*"],
 		}
 	},
 	"include": [

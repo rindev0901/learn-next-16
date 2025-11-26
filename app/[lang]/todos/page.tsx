@@ -6,7 +6,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { Route } from "next";
 import CreateTodoForm from "./create/form";
 
-export default function TodosPage() {
+export default async function TodosPage({
+	searchParams,
+}: Partial<PageProps<"/[lang]/todos">>) {
+	const { page, size } = (await searchParams) || {};
+
 	return (
 		<div className="space-y-3">
 			<div className="flex items-center gap-3">
@@ -28,7 +32,7 @@ export default function TodosPage() {
 						</div>
 					}
 				>
-					<TodoList />
+					<TodoList currentPage={page as never} pageSize={size as never} />
 				</Suspense>
 				<CreateTodoForm isRedirect={false} />
 			</div>

@@ -2,20 +2,59 @@ import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAuth } from "./auth";
 import { DatabaseError } from "pg";
+import { DataPagination } from "@/types/pagination";
+import { Pagination, pagingSchema } from "@/schemas/pagination";
 
-async function getTodos() {
+type Todo = {
+	id: string;
+	title: string;
+	completed: boolean;
+};
+
+async function getTodos(
+	formData: Partial<Pagination>
+): Promise<DataPagination<Todo>> {
 	"use cache: private";
 	cacheLife("max");
+
+	const { data } = pagingSchema.safeParse(formData);
+
+	const currentPage = data!.currentPage;
+	const pageSize = data!.pageSize;
 
 	const { user } = await requireAuth();
 
 	cacheTag(`user-todos-${user.id}`);
 	try {
-		const result = await db.query(
-			"SELECT id, title FROM todos WHERE user_id = $1",
+		// 1. Get total items
+		const countResult = await db.query(
+			"SELECT COUNT(*) AS total FROM todos WHERE user_id = $1",
 			[user.id]
 		);
-		return result.rows;
+		const totalItems = Number(countResult.rows[0].total);
+
+		// 2. Get pagination data
+		const result = await db.query(
+			`
+			SELECT id, title, completed
+			FROM todos
+			WHERE user_id = $1
+			ORDER BY created_at DESC
+			OFFSET $2 LIMIT $3
+			`,
+			[user.id, (currentPage - 1) * pageSize, pageSize]
+		);
+
+		// 3. Build response
+		return {
+			data: result.rows,
+			paging: {
+				currentPage,
+				pageSize,
+				totalItems,
+				totalPages: Math.ceil(totalItems / pageSize),
+			},
+		};
 	} catch (error) {
 		// Extract meaningful error message
 		let errorMessage = "Unknown error";
