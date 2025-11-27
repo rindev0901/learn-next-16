@@ -28,9 +28,6 @@ export default function ForbiddenPage() {
 					<Button asChild variant="default">
 						<Link href={`/` as Route}>Go to Home</Link>
 					</Button>
-					<Button asChild variant="outline">
-						<Link href="/login">Sign In</Link>
-					</Button>
 				</div>
 			</div>
 		</main>

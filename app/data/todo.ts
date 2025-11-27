@@ -1,14 +1,18 @@
+import "server-only";
+
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAuth } from "./auth";
 import { DatabaseError } from "pg";
 import { DataPagination } from "@/types/pagination";
 import { Pagination, pagingSchema } from "@/schemas/pagination";
+import { forbidden } from "next/navigation";
 
 type Todo = {
 	id: string;
 	title: string;
 	completed: boolean;
+	user_id?: string;
 };
 
 async function getTodos(
@@ -100,17 +104,19 @@ async function getTodoStatusById(id: string) {
 	}
 }
 
-async function getTodoById(id: string) {
+async function getTodoById(id: string, userId: string): Promise<Todo | null> {
 	"use cache: remote";
 	cacheTag(`todo-${id}`);
 	cacheLife("max");
+
+	let todo: Todo | undefined = undefined;
 	try {
 		const result = await db.query(
-			"SELECT id, title, completed FROM todos WHERE id = $1 limit 1",
+			"SELECT id, title, completed, user_id FROM todos WHERE id = $1 limit 1",
 			[id]
 		);
 
-		return result.rows[0];
+		todo = result.rows[0];
 	} catch (error) {
 		// Extract meaningful error message
 		let errorMessage = "Unknown error";
@@ -126,5 +132,17 @@ async function getTodoById(id: string) {
 		console.error("Error fetching todos:", errorMessage);
 		throw new Error(`Failed to fetch todos: ${errorMessage}`);
 	}
+
+	if (todo) {
+		const { user_id, ...rest } = todo;
+
+		if (user_id !== userId) {
+			forbidden();
+		}
+
+		return rest;
+	}
+
+	return null;
 }
 export { getTodos, getTodoStatusById, getTodoById };

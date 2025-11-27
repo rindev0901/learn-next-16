@@ -21,7 +21,8 @@ import { Button } from "@/components/ui/button";
 import { User } from "better-auth";
 import { toast } from "sonner";
 import { useLocale } from "@/app/hooks/useLocale";
-import { logout } from "@/app/[lang]/actions/logout";
+import { logout } from "@/lang/actions/logout";
+import { usePathname } from "next/navigation";
 
 interface UserTriggerProps {
 	user: User;
@@ -29,6 +30,7 @@ interface UserTriggerProps {
 
 export function UserTrigger({ user }: UserTriggerProps) {
 	const locale = useLocale();
+	const pathname = usePathname();
 
 	return (
 		<DropdownMenu>
@@ -76,7 +78,7 @@ export function UserTrigger({ user }: UserTriggerProps) {
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={async () => {
-						const { error } = await logout(locale);
+						const { error } = await logout(locale,pathname);
 
 						if (error) {
 							toast.error(error);

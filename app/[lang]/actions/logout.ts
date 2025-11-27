@@ -5,7 +5,7 @@ import { APIError } from "better-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function logout(lang: string) {
+export async function logout(lang: string, returnUrl: string) {
 	try {
 		const headerList = await headers();
 		await auth.api.signOut({ headers: headerList });
@@ -21,5 +21,5 @@ export async function logout(lang: string) {
 			statusCode: 500,
 		};
 	}
-	redirect(`/${lang}/login`);
+	redirect(`/${lang}/login?returnUrl=${encodeURIComponent(returnUrl)}`);
 }

@@ -1,4 +1,3 @@
-import { requireAuth } from "@/app/data/auth";
 import { getDictionary } from "./dictionaries";
 import { Lang } from "@/proxy";
 import Link from "next/link";
@@ -8,7 +7,6 @@ export default async function Page({
 }: {
 	params: Promise<{ lang: Lang }>;
 }) {
-	await requireAuth();
 	const { lang } = await params;
 
 	const dict = await getDictionary(lang); // en

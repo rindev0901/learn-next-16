@@ -1,21 +1,21 @@
 "use client";
 
-import { useLocale } from "@/app/hooks/useLocale";
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth-client";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function GoogleLoginButton() {
 	const [isLoading, setIsLoading] = useState(false);
-	const locale = useLocale();
+	const pathname = usePathname();
 
 	const handleGoogleLogin = async () => {
 		try {
 			setIsLoading(true);
 			await signIn.social({
 				provider: "google",
-				callbackURL: `/${locale}`,
+				callbackURL: pathname,
 			});
 		} catch (error) {
 			console.error("Google login error:", error);

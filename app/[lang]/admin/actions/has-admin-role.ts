@@ -1,3 +1,5 @@
+"use server";
+
 import { requireAuth } from "@/app/data/auth";
 import { forbidden } from "next/navigation";
 

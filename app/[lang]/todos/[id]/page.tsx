@@ -1,12 +1,15 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { getTodoStatusById } from "@/app/data/todo";
+import { requireAuth } from "@/app/data/auth";
 
 export default async function TodoDetailPage({
 	params,
 }: {
 	params: Promise<{ id: string }>;
 }) {
+	await requireAuth();
+
 	const { id } = await params;
 
 	return (

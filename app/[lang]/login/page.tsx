@@ -6,24 +6,28 @@ import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { useLocale } from "@/app/hooks/useLocale";
 import { login } from "@/lang/actions/login";
 import { cn } from "@/lib/utils";
 import { GoogleLoginButton } from "./google-btn";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function LoginPage(
 	props: Partial<PageProps<"/[lang]/login"> & { className: string }>
 ) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const lang = useLocale();
 	const [isPending, startTransition] = useTransition();
+
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const returnUrl = searchParams.get("returnUrl") || pathname;
 
 	const handleSubmit = () =>
 		startTransition(async () => {
-			const { error } = await login(email, password, lang);
+			const { error } = await login(email, password, returnUrl);
 			if (error) {
 				toast.error(error);
+				return;
 			}
 		});
 
