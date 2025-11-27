@@ -2,20 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth-client";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function GoogleLoginButton() {
 	const [isLoading, setIsLoading] = useState(false);
+
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const returnUrl = searchParams.get("returnUrl") || pathname;
+
 
 	const handleGoogleLogin = async () => {
 		try {
 			setIsLoading(true);
 			await signIn.social({
 				provider: "google",
-				callbackURL: pathname,
+				callbackURL: returnUrl,
 			});
 		} catch (error) {
 			console.error("Google login error:", error);

@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { APIError } from "better-auth";
 import { Route } from "next";
-import { redirect } from "next/navigation";
+import { permanentRedirect,  } from "next/navigation";
 
 /*
 - Error Handling
@@ -34,5 +34,5 @@ export async function login(
 		};
 	}
 
-	redirect(returnUrl as Route);
+	permanentRedirect(returnUrl as Route);
 }
