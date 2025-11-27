@@ -9,12 +9,13 @@ export function generateStaticParams() {
 export default async function LocaleLayout({
 	children,
 	params,
-}: LayoutProps<"/[lang]">) {
+	modal,
+}: LayoutProps<"/[lang]"> & { modal: React.ReactNode }) {
 	const { lang } = await params;
 
 	return (
 		<>
-
+			{modal}
 			<Header lang={lang} />
 			<div className="container mx-auto">{children}</div>
 		</>
