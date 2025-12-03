@@ -1,3 +1,5 @@
+import "server-only";
+
 import { auth } from "@/lib/auth";
 import { cacheLife, cacheTag } from "next/cache";
 import { headers } from "next/headers";
