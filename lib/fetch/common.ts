@@ -24,6 +24,9 @@ export type FetchWithCookiesOptions = RequestInit & {
 	setCookies?: CookieSetMethod;
 };
 
+// Global refresh promise to prevent race conditions
+let refreshPromise: Promise<boolean> | null = null;
+
 /**
  * Common fetch utility with cookie handling and automatic token refresh.
  * Returns both the response and any cookies that need to be set.
@@ -122,39 +125,77 @@ export async function fetchWithCookies(
 	});
 	// Handle token refresh on 401
 	if (response.status === 401 && autoRefresh) {
-		const refreshURL = baseURL
-			? `${baseURL}${refreshEndpoint}`
-			: refreshEndpoint;
+		// If a refresh is already in progress, wait for it
+		if (refreshPromise) {
+			const refreshed = await refreshPromise;
+			if (refreshed) {
+				// Retry with new tokens after refresh completes
+				const retryHeaders = new Headers(userHeaders);
+				const updatedCookieHeader = await getCookieHeader();
+				if (updatedCookieHeader) {
+					retryHeaders.set("cookie", updatedCookieHeader);
+				}
 
-		const cookieHeader = await getCookieHeader();
-		const refreshResponse = await fetch(refreshURL, {
-			method: "POST",
-			headers: {
-				cookie: cookieHeader,
-			},
-			credentials: "include",
-		});
+				response = await fetch(fullURL, {
+					...fetchOptions,
+					headers: retryHeaders,
+					credentials: fetchOptions.credentials || "include",
+				});
 
-		if (refreshResponse.ok) {
-			// Extract cookies from refresh response
-			await extractCookiesFromResponse(refreshResponse);
-
-			// Retry original request with new tokens
-			const retryHeaders = new Headers(userHeaders);
-			const updatedCookieHeader = await getCookieHeader();
-
-			if (updatedCookieHeader) {
-				retryHeaders.set("cookie", updatedCookieHeader);
+				await extractCookiesFromResponse(response);
 			}
+		} else {
+			// Start a new refresh
+			refreshPromise = (async () => {
+				try {
+					const refreshURL = baseURL
+						? `${baseURL}${refreshEndpoint}`
+						: refreshEndpoint;
 
-			response = await fetch(fullURL, {
-				...fetchOptions,
-				headers: retryHeaders,
-				credentials: fetchOptions.credentials || "include",
-			});
+					const cookieHeader = await getCookieHeader();
+					const refreshResponse = await fetch(refreshURL, {
+						method: "POST",
+						headers: {
+							cookie: cookieHeader,
+						},
+						credentials: "include",
+					});
 
-			// Extract cookies from retry response if present
-			await extractCookiesFromResponse(response);
+					if (refreshResponse.ok) {
+						// Extract cookies from refresh response
+						await extractCookiesFromResponse(refreshResponse);
+						return true;
+					}
+					return false;
+				} catch (error) {
+					console.error("Token refresh failed:", error);
+					return false;
+				} finally {
+					// Clear the refresh promise after completion
+					refreshPromise = null;
+				}
+			})();
+
+			const refreshed = await refreshPromise;
+
+			if (refreshed) {
+				// Retry original request with new tokens
+				const retryHeaders = new Headers(userHeaders);
+				const updatedCookieHeader = await getCookieHeader();
+
+				if (updatedCookieHeader) {
+					retryHeaders.set("cookie", updatedCookieHeader);
+				}
+
+				response = await fetch(fullURL, {
+					...fetchOptions,
+					headers: retryHeaders,
+					credentials: fetchOptions.credentials || "include",
+				});
+
+				// Extract cookies from retry response if present
+				await extractCookiesFromResponse(response);
+			}
 		}
 	}
 

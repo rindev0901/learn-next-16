@@ -22,6 +22,9 @@ export async function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	if (pathname.startsWith("/api/")) {
 		const res = await updateSession(request);
+
+		console.log(res.cookies);
+
 		return res;
 	}
 
