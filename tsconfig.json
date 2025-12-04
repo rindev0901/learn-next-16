@@ -21,10 +21,9 @@
 		"paths": {
 			"@/*": ["./*"],
 			"@/lang/*": ["./app/[lang]/*"],
-			"@/utils/*": ["./app/utils/*"],
 			"@/public/*": ["./public/*"],
 			"@/types/*": ["./app/types/*"],
-			"@/schemas/*": ["./app/schemas/*"],
+			"@/schemas/*": ["./app/schemas/*"]
 		}
 	},
 	"include": [
